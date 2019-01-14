@@ -3,9 +3,10 @@ require_relative './todo'
 
 class Cli
   PROMPT = '>> '
+  TODOS_JSON_PATH = '/tmp/.todos.json'
 
   def initialize
-    @todos = []
+    @todos = parse_json
   end
 
   def run
@@ -65,7 +66,23 @@ class Cli
   end
 
   def bye
-    puts 'bye'
+    save_to_json
     exit(0)
+  end
+
+  def parse_json
+    return [] unless File.exist?(TODOS_JSON_PATH)
+
+    File.open(TODOS_JSON_PATH) do |file|
+      JSON.load(file).map do |t|
+        Todo.new(t["title"], t["id"], t["is_done"])
+      end
+    end
+  end
+
+  def save_to_json
+    File.open(TODOS_JSON_PATH, 'w') do |file|
+      file.puts("[#{@todos.map(&:serialize).join(", ")}]")
+    end
   end
 end
