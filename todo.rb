@@ -1,22 +1,23 @@
 require 'securerandom'
 
 class Todo
+  attr_accessor :id, :title, :is_done
+
   def initialize(title)
     @id = SecureRandom.uuid[0..3]
     @title = title
-    @done = false
+    @is_done = false
   end
 
   def done?
-    @done
+    @is_done
   end
 
   def done
-    @done = true
-  end
+    todo = self.clone
+    todo.is_done = true
 
-  def undone
-    @done = false
+    todo
   end
 
   def format

@@ -17,8 +17,9 @@ class Cli
       when 'list'
         filter = {
           '--undone' => :undone,
-          '--done' => :done,
+          '--done' => :is_done,
         }[opts[0]]
+
         show_list(filter)
       when 'add'
         title = opts.join(' ')
@@ -26,9 +27,9 @@ class Cli
 
         @todos << Todo.new(title)
       when 'remove'
-        puts 'remove'
+        @todos.delete_if { |t| t.id == opts[0] }
       when 'done'
-        puts 'done'
+        @todos = @todos.map { |t| (t.id == opts[0]) ? t.done : t }
       when 'usage', 'help'
         print_usage
       when 'exit', 'bye'
@@ -42,7 +43,7 @@ class Cli
   def show_list(filter)
     todos = if filter == :undone
               @todos.select { |t| !t.done? }
-            elsif filter == :done
+            elsif filter == :is_done
               @todos.select { |t| t.done? }
             else
               @todos
