@@ -1,4 +1,5 @@
 require 'json'
+require_relative './todo'
 
 class Cli
   PROMPT = '>> '
@@ -11,12 +12,17 @@ class Cli
     loop do
       print PROMPT
 
-      command = gets.chomp
+      command, *opts = gets.chomp.split(' ')
       case command
       when 'list'
-        puts 'list'
+        @todos.each do |todo|
+          puts todo.format
+        end
       when 'add'
-        puts 'add'
+        title = opts.join(' ')
+        next if title.empty?
+
+        @todos << Todo.new(title)
       when 'remove'
         puts 'remove'
       when 'done'
@@ -36,8 +42,8 @@ class Cli
       commands
         list [--done|undone]
         add TITLE
-        remove NUMBER
-        done NUMBER
+        remove ID
+        done ID
     USAGE
   end
 
