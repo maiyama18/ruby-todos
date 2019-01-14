@@ -1,8 +1,8 @@
 ## usage
 
 ```shell
-todos show [--undone|--done]
-todos add <title>
-todos done <number>
-todos remove <number>
+ruby todos.rb show [--undone|--done]
+ruby todos.rb add <title>
+ruby todos.rb done <number>
+ruby todos.rb remove <number>
 ```
