@@ -15,9 +15,11 @@ class Cli
       command, *opts = gets.chomp.split(' ')
       case command
       when 'list'
-        @todos.each do |todo|
-          puts todo.format
-        end
+        filter = {
+          '--undone' => :undone,
+          '--done' => :done,
+        }[opts[0]]
+        show_list(filter)
       when 'add'
         title = opts.join(' ')
         next if title.empty?
@@ -34,6 +36,20 @@ class Cli
       else
         print_usage
       end
+    end
+  end
+
+  def show_list(filter)
+    todos = if filter == :undone
+              @todos.select { |t| !t.done? }
+            elsif filter == :done
+              @todos.select { |t| t.done? }
+            else
+              @todos
+            end
+
+    todos.each do |todo|
+      puts todo.format
     end
   end
 
